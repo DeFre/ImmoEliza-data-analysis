@@ -21,6 +21,9 @@ Open the Jupyter Notebook called data-analysis.ipynb.
 Without modifcation, the code will import scraped_data_10.csv as a dataframe.
 When you "Run All", all code blocks will run in sequence and create the visuals which can be found in the section Graphs of the notebook.
 
+## Models
+
+
 ## Timeline
 This project was created in July 2023 in two in-class coding challenge. 
 * Data Analysis: between 05/07/2023 & 11/07/2023
