@@ -22,7 +22,9 @@ Without modifcation, the code will import scraped_data_10.csv as a dataframe.
 When you "Run All", all code blocks will run in sequence and create the visuals which can be found in the section Graphs of the notebook.
 
 ## Timeline
-This project was created between 05/07/2023 and 11/07/2023 in a 5-day in-class coding challenge. 
+This project was created in July 2023 in two in-class coding challenge. 
+* Data Analysis: between 05/07/2023 & 11/07/2023
+* Implementing Machine Learning Models: between 17/07/2023 & 20/07/2023.
 
 ## Contributors
 This project was individual challenge and was fully written by the author Fré Van Oers with some help from his coaches and fellow student.
