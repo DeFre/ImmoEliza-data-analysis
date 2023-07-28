@@ -1,40 +1,60 @@
-from typing import Union
+import json
+import pandas as pd
+import xgboost as xg
 from fastapi import FastAPI
-from pydantic import BaseModel
+from pydantic import BaseModel, validator
+from typing import Union, Any, Dict, Optional, Tuple
 
-class InputDoubler(BaseModel):
-    to_double: int
+# http://127.0.0.1:8000/docs/
 
-class SalaryInput(BaseModel):
-    salary: int
-    bonus: int
-    taxes: int
+class ImmoInput(BaseModel):
+    #immo_code: Optional[int] = None         #this value is not used in the model, but is included for easy verification
+    #price: Optional[int] = None             #this value is not used in the model, but is included for easy verification
+    #property_type: Optional[str] = None     #if this is not filled out the xg_model_full will be used
+    #property_subtype: Optional[str] = None  
+    primary_energy_consumption: int
+    furnished: int
+    terrace: int
+    terrace_surface: int
+    plot_surface: int
+    living_room_surface: int
+    frontages: int
+    construction_year: int
+    bedrooms: int
+    bathrooms: int
+    shower_rooms: int
+    office: int
+    toilets: int
 
 app = FastAPI()
 
 @app.get("/")
 def read_root():
-    return {"Hello": "World"}
+    return {'message': 'Welcome to the ImmoEliza House Price Predictor',
+            'INFO': 'to use this API, please provide the following features as integers',
+            "data-format":{     
+                "primary_energy_consumption": "integer",
+                "furnished": "integer",
+                "terrace": "integer",
+                "terrace_surface": "integer",
+                "plot_surface": "integer",
+                "living_room_surface": "integer",
+                "frontages": "integer",
+                "construction_year": "integer",
+                "bedrooms": "integer",
+                "bathrooms": "integer",
+                "shower_rooms": "integer",
+                "office": "integer",
+                "toilets": "integer"
+                }
 
-@app.get("/items/{item_id}")
-def read_item(item_id: int, q: Union[str, None] = None):
+            }
 
-    return {"item_id": item_id, "q": q}
-
-# http://127.0.0.1:8000/double/
-@app.post("/double/")
-def doubler(data: InputDoubler):
-    result = data.to_double * 2
-    return {"result": result}
-    
-# http://127.0.0.1:8000/salary_calculator/
-# http://127.0.0.1:8000/docs/salary_calculator/
-@app.post("/salary_calculator/")
-def salary_calculator(data: SalaryInput):
-    try: 
-        result = data.salary + data.bonus - data.taxes
-        return {"result": result}
-    except TypeError:
-        return {"error": "expected numbers, got strings."}
-    except KeyError as e:
-        return {"error": f"3 fields expected (salary, bonus, taxes). You forgot: {e}."}
+@app.post("/price_predictor/")
+def price_predictor(data: ImmoInput):
+    model = xg.Booster()
+    model.load_model("models/xg_model_full.json")
+    test_df = pd.DataFrame(data.model_dump(), index=[0])
+    xgtest = xg.DMatrix(test_df.values)
+    prediction = float(model.predict(xgtest))
+    return {f"Based on the input provided, we expect this property to be valued at € {prediction}."}
