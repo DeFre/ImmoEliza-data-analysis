@@ -1,4 +1,3 @@
-import json
 import pandas as pd
 import xgboost as xg
 from fastapi import FastAPI
